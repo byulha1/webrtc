@@ -93,8 +93,9 @@ socket.on('message', function(message) {
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
+// audio, video 설정
 navigator.mediaDevices.getUserMedia({
-  audio: false,
+  audio: true,
   video: true
 })
 .then(gotStream)
@@ -111,6 +112,22 @@ function gotStream(stream) {
     maybeStart();
   }
 }
+
+// 오디오 설정외에 인터넷에서 검색한 비디오의 다양한 옵션도 추가로 작성하였다.
+const mediaOption = { 
+  audio: true, 
+  video: { 
+    mandatory: { 
+      maxWidth: 160, 
+      maxHeight: 120, 
+      maxFrameRate: 5, 
+    }, 
+    optional: [ 
+      { facingMode: 'user' }, 
+    ], 
+  }, 
+}; 
+navigator.mediaDevices.getUserMedia(mediaOption);
 
 var constraints = {
   video: true
@@ -228,10 +245,16 @@ function requestTurn(turnURL) {
   }
 }
 
+// 그러다 화상채팅이 시작되면(handleRemoteStreamAdded - 다음 코드)
+// 내 화면(#localVideo)에 localVideoInChatting 클래스를 추가하여(add) 내 화면을 작게 만들고,
+// 상대 화면(#remoteVideo)은 remoteVideoInChatting 클래스를 추가하여 크게 잘 보이도록 한다.
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
   remoteStream = event.stream;
   remoteVideo.srcObject = remoteStream;
+
+  remoteVideo.classList.add("remoteVideoInChatting");
+  localVideo.classList.add("localVideoInChatting");
 }
 
 function handleRemoteStreamRemoved(event) {
@@ -244,7 +267,12 @@ function hangup() {
   sendMessage('bye');
 }
 
+// 대화가 종료되면(handleRemoteHangup)
+// 추가한 클래스들을 제거(remove)하여 원래데로 되돌린다.
 function handleRemoteHangup() {
+  remoteVideo.classList.remove("remoteVideoInChatting");
+  localVideo.classList.remove("localVideoInChatting");
+
   console.log('Session terminated.');
   stop();
   isInitiator = false;
