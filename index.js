@@ -2,24 +2,28 @@
 
 var os = require('os');
 var nodeStatic = require('node-static');
-//var http = require('http');
 var socketIO = require('socket.io');
+const http = require('http');
 const https = require('https');
 const fs  = require('fs');
 const upload = require('./config/multer');
 var express = require('express');
 var app = express();
-var port = 3000;
+var httpPort = 3000;
+var httpsPort = 3443;
 const options = {
   key : fs.readFileSync('./private.pem'),
   cert: fs.readFileSync('./public.pem')
 };
 
-var fileServer = new(nodeStatic.Server)();
+// var fileServer = new(nodeStatic.Server)();
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(options, app);
+
 // var server = https.createServer(options, function(req, res) {
 //   fileServer.serve(req, res);
 // });
-var server = https.createServer(options, app);
+app.use(express.static(__dirname));
 
 app.get('/', (request, response) => {
   fs.readFile('HTMLPage.html', (error, data) => {
@@ -35,11 +39,8 @@ app.get('/connect', (request, response) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log(`Server Running at ${port}`);
-});
-
-var io = socketIO.listen(app);
+// var io = socketIO.listen(app);
+var io = require('socket.io')(httpsServer);
 io.sockets.on('connection', function(socket) {
 
   // convenience function to log server messages on the client
@@ -118,3 +119,6 @@ io.sockets.on('connection', function(socket) {
   });
 
 });
+
+httpServer.listen(httpPort, ()=>console.log(`Server Running at ${httpPort}`));
+httpsServer.listen(httpsPort, ()=>console.log(`Server Running at ${httpsPort}`));
