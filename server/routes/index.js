@@ -15,8 +15,7 @@ var constants = {
   CEOD_KEY: 'qufgk123@',
   //WSS_HOST_ACTIVE_HOST_KEY: 'wss_host_active_host', //memcache key for the active collider host.
   WSS_HOST_ACTIVE_HOST_KEY: 'localhost:3000', //memcache key for the active collider host.
-  //WSS_HOST_PORT_PAIRS: ['apprtc-ws.webrtc.org:443', 'apprtc-ws-2.webrtc.org:443'],
-  WSS_HOST_PORT_PAIRS: ['localhost:3000'],
+  WSS_HOST_PORT_PAIRS: ['apprtc-ws.webrtc.org:443', 'apprtc-ws-2.webrtc.org:443'],
   RESPONSE_ERROR: 'ERROR',
   RESPONSE_UNKNOWN_ROOM: 'UNKNOWN_ROOM',
   RESPONSE_UNKNOWN_CLIENT: 'UNKNOWN_CLIENT',
@@ -279,11 +278,7 @@ function getRoomParameters(req, roomId, clientId, isInitiator) {
   var params = {
     'error_messages': errorMessages,
     'is_loopback' : JSON.stringify(debug == 'loopback'),
-    //[kyg] 'pc_config': JSON.stringify(pcConfig),
-    'pc_config': JSON.stringify({"iceServers": [
-                                                  {"url":"turn:byulha1@210.114.19.152:3478", "credential":"qufgk123@"}
-                                                ]
-                                 }),
+    'pc_config': JSON.stringify(pcConfig),
     'pc_constraints': JSON.stringify(pcConstraints),
     'offer_constraints': JSON.stringify(offerConstraints),
     'media_constraints': JSON.stringify(mediaConstraints),
