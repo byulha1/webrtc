@@ -281,7 +281,6 @@ function getRoomParameters(req, roomId, clientId, isInitiator) {
     'is_loopback' : JSON.stringify(debug == 'loopback'),
     //[kyg] 'pc_config': JSON.stringify(pcConfig),
     'pc_config': JSON.stringify({"iceServers": [
-                                                  {"url": "stun:stun.l.google.com:19302"},
                                                   {"url":"turn:byulha1@210.114.19.152:3478", "credential":"qufgk123@"}
                                                 ]
                                  }),
