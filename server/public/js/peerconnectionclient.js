@@ -31,7 +31,22 @@ var PeerConnectionClient = function(params, startTime) {
 
   // Create an RTCPeerConnection via the polyfill (adapter.js).
   this.pc_ = new RTCPeerConnection(
-      params.peerConnectionConfig, params.peerConnectionConstraints);
+    [
+      {
+        "urls": [
+          "turn:210.114.19.152:3478?transport=udp",
+          "turn:210.114.19.152:3478?transport=tcp"
+        ],
+        "username": "byulha1",
+        "credential": "qufgk123@"
+      },
+      {
+        "urls": [
+          "stun:210.114.19.152:3478"
+        ]
+      }
+    ], params.peerConnectionConstraints);
+      //params.peerConnectionConfig, params.peerConnectionConstraints);
   this.pc_.onicecandidate = this.onIceCandidate_.bind(this);
   this.pc_.onaddstream = this.onRemoteStreamAdded_.bind(this);
   this.pc_.onremovestream = trace.bind(null, 'Remote stream removed.');
